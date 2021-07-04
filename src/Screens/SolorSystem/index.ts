@@ -222,8 +222,34 @@ function animate () {
     spaceBodies.forEach((b) => {
         b.animate();
     });
-    
+
     renderer.render(scene, camera);
 }
+
+
+const planetDiv = document.getElementById('planets');
+const planetNames = ['sun', 'mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
+[
+    sun,
+    mercury,
+    venus,
+    earth,
+    mars,
+    jupiter,
+    saturn,
+    uranus,
+    neptune
+].forEach((planet, index) => {
+    const selectPlanet = () => {
+        // orbitController.target = planet.body.position;
+        // orbitController.update()
+        planet.body.add(camera);
+        camera.position.z = 10;
+    }
+    const a = document.createElement('a');
+    a.onclick = selectPlanet;
+    a.innerText = planetNames[index];
+    planetDiv.append(a);
+});
 
 animate();
