@@ -28,21 +28,28 @@ const saturnTexture = loader.load(sa);
 const uranusTexture = loader.load(u);
 const neptuneTexture = loader.load(n);
 
-// setting information about model
-const info = document.getElementById('info')
-info.innerText = "Description: Solar System";
-
 // Basic setup for scene, camera and renderer
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
+// some offsets to keep everything sane
+const offsets = {
+    radius: 2000,
+    spin: 1000000,
+    orbitRotation: 10000,
+    distanceOffset: 100000,
+}
+
 const spaceBodies = [];
 
 // sun
-const sun = new SpaceBody(20, 32, 0.004, 0, { map: sunTexture });
+const sunProps = {
+    radius: 696340/offsets.radius,
+}
+const sun = new SpaceBody(sunProps.radius, 32, -0.004, 0, { map: sunTexture });
 scene.add(sun.orbit);
 spaceBodies.push(sun);
 // add sunlight
@@ -54,46 +61,152 @@ const light = new THREE.PointLight( 'yellow', 10, 1000 );
 light.position.set(100, 0, 0);
 scene.add(light);
 
-// mercury
-const mercury = new SpaceBody(4, 32, 0.01, 0.01, { map: mercuryTexture }, { x: 30 });
+// mercury - all other planets follow the same prop definitions 
+const mercuryProps = {
+    radius: 2439.7/offsets.radius, // actual size of mercury in km divided by offset
+    spin: -10.83/offsets.spin, // actual speed of mercury in km/h divided by offset and negative because almost all spin counter-clockwise
+    orbitRotation: 47.36/offsets.orbitRotation, // actual mean orbit velocity in km/s divided by offset and relevant sign to say about direction or rotation
+    distanceFromSun: 57900000/offsets.distanceOffset, // actual distance of mercury from sun in km divided by offset
+}
+const mercury = new SpaceBody(
+    mercuryProps.radius,
+    32,
+    mercuryProps.spin,
+    mercuryProps.orbitRotation,
+    { map: mercuryTexture },
+    { x: mercuryProps.distanceFromSun }
+);
 scene.add(mercury.orbit);
 spaceBodies.push(mercury);
 
 // venus
-const venus = new SpaceBody(6, 32, 0.008, 0.008, { map: venusTexture }, { x: 50 })
+const venusProps = {
+    radius: 6051.8/offsets.radius,
+    spin: -6.52/offsets.spin,
+    orbitRotation: 35.02/offsets.orbitRotation,
+    distanceFromSun: 108200000/offsets.distanceOffset,
+}
+const venus = new SpaceBody(
+    venusProps.radius,
+    32,
+    venusProps.spin,
+    venusProps.orbitRotation,
+    { map: venusTexture },
+    { x: venusProps.distanceFromSun }
+);
 scene.add(venus.orbit);
 spaceBodies.push(venus);
 
 // earth
-const earth = new SpaceBody(8, 32, 0.004, 0.003, { map: earthTexture }, { x: 100 });
+const earthProps = {
+    radius: 6378.1/offsets.radius,
+    spin: -1674/offsets.spin,
+    orbitRotation: 29.78/offsets.orbitRotation,
+    distanceFromSun: 149600000/offsets.distanceOffset,
+}
+const earth = new SpaceBody(
+    earthProps.radius,
+    32,
+    earthProps.spin,
+    earthProps.orbitRotation,
+    { map: earthTexture },
+    { x: earthProps.distanceFromSun }
+);
 scene.add(earth.orbit);
 spaceBodies.push(earth);
-const moon = new SpaceBody(4, 32, 0.002, 0.004, { map: moonTexture }, { x: 20 });
+const moonProps = {
+    radius: 1738.1/offsets.radius
+}
+const moon = new SpaceBody(moonProps.radius, 32, -0.002, 0.004, { map: moonTexture }, { x: 20 });
 earth.body.add(moon.orbit);
 spaceBodies.push(moon);
 
 // mars
-const mars = new SpaceBody(3, 32, 0.006, 0.004, { map: marsTexture }, { x: 160 });
+const marsProps = {
+    radius: 3396.2/offsets.radius,
+    spin: -866/offsets.spin,
+    orbitRotation: 24/offsets.orbitRotation,
+    distanceFromSun: 227900000/offsets.distanceOffset,
+}
+const mars = new SpaceBody(
+    marsProps.radius,
+    32,
+    marsProps.spin,
+    marsProps.orbitRotation,
+    { map: marsTexture },
+    { x: marsProps.distanceFromSun }
+);
 scene.add(mars.orbit);
 spaceBodies.push(mars);
 
 // jupiter
-const jupiter = new SpaceBody(10, 32, 0.008, -0.0008, { map: jupiterTexture }, { x: 200 });
+const jupiterProps = {
+    radius: 71492/offsets.radius,
+    spin: -45583/offsets.spin,
+    orbitRotation: 13.07/offsets.orbitRotation,
+    distanceFromSun: 778600000/offsets.distanceOffset
+}
+const jupiter = new SpaceBody(
+    jupiterProps.radius,
+    32,
+    jupiterProps.spin,
+    jupiterProps.orbitRotation,
+    { map: jupiterTexture },
+    { x: jupiterProps.distanceFromSun }
+);
 scene.add(jupiter.orbit);
 spaceBodies.push(jupiter);
 
 // saturn
-const saturn = new SpaceBody(8, 32, 0.008, 0.002, { map: saturnTexture }, { x: 240 });
+const saturnProps = {
+    radius: 60268/offsets.radius,
+    spin: -36840/offsets.spin,
+    orbitRotation: 9.68/offsets.orbitRotation,
+    distanceFromSun: 1433500000/offsets.distanceOffset
+}
+const saturn = new SpaceBody(
+    saturnProps.radius,
+    32,
+    saturnProps.spin,
+    saturnProps.orbitRotation,
+    { map: saturnTexture },
+    { x: saturnProps.distanceFromSun }
+);
 scene.add(saturn.orbit);
 spaceBodies.push(saturn);
 
 // uranus
-const uranus = new SpaceBody(5, 32, 0.02, -0.001, { map: uranusTexture }, { x: 290 });
+const uranusProps = {
+    radius: 25559/offsets.radius,
+    spin: -14794/offsets.spin,
+    orbitRotation: 6.8/offsets.orbitRotation,
+    distanceFromSun: 2872500000/offsets.distanceOffset
+}
+const uranus = new SpaceBody(
+    uranusProps.radius,
+    32,
+    uranusProps.spin,
+    uranusProps.orbitRotation,
+    { map: uranusTexture },
+    { x: uranusProps.distanceFromSun }
+);
 scene.add(uranus.orbit);
 spaceBodies.push(uranus);
 
 // neptune
-const neptune = new SpaceBody(5, 32, -0.01, 0.004, { map: neptuneTexture }, { x: 320 });
+const neptuneProps = {
+    radius: 24764/offsets.radius,
+    spin: -9719/offsets.spin,
+    orbitRotation: 5.43/offsets.orbitRotation,
+    distanceFromSun: 4495100000/offsets.distanceOffset
+}
+const neptune = new SpaceBody(
+    neptuneProps.radius, 32,
+    neptuneProps.spin,
+    neptuneProps.orbitRotation,
+    { map: neptuneTexture },
+    { x: neptuneProps.distanceFromSun }
+);
 scene.add(neptune.orbit);
 spaceBodies.push(neptune);
 
@@ -102,15 +215,14 @@ const orbitController = new OrbitControls(camera, renderer.domElement);
 orbitController.update();
 
 // shift camera
-camera.position.z = 350;
+camera.position.z = 1000;
 
 function animate () {
     requestAnimationFrame(animate);
     spaceBodies.forEach((b) => {
         b.animate();
     });
-    orbitController.target.copy(earth.orbit.position);
-    orbitController.update();
+    
     renderer.render(scene, camera);
 }
 

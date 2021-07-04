@@ -8,18 +8,32 @@
 
             #info {
                 position: absolute;
-                top: 10px;
-                width: 100px;
-                padding: 10px;
-                text-align: center;
-                z-index: 100;
-                display:block;
-                background-color: aliceblue;
+                top: 0px;
+                left: 0px;
+                bottom: 0px;
+                width: 10vw;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(255, 255, 255, 0.05);
+                color: white;
             }
 		</style>
 	</head>
 	<body>
-        <div class="info" id="info"></div>
+        <div class="info" id="info">
+            <h4>Solar System</h4>
+            <a>Sun</a>
+            <a>Mercury</a>
+            <a>Venus</a>
+            <a>Earth</a>
+            <a>Mars</a>
+            <a>Jupiter</a>
+            <a>Saturn</a>
+            <a>Uranus</a>
+            <a>Neptune</a>
+        </div>
 	</body>
     <script src="./index.ts"></script>
 </html>
